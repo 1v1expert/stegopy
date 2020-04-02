@@ -2,7 +2,7 @@ from PIL import Image
 from re import findall
 
 
-def stega_decrypt():
+def decrypt():
     a = []
     keys = []
     img = Image.open(input("path to image: "))
@@ -17,4 +17,4 @@ def stega_decrypt():
     return ''.join([chr(elem) for elem in a])
 
 
-print("you message: ", stega_decrypt())
+print("you message: ", decrypt())
