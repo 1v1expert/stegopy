@@ -135,7 +135,7 @@ dmypy.json
 local.py
 
 # static files
-*/images/original/*.png
-*/images/watermark/*.png
-*/images/fractal/*.png
-*/images/stego/*.png
+project/media/images/original/*.png
+project/media/images/watermark/*.png
+project/media/images/fractal/*.png
+project/media/images/stego/*.png
