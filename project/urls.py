@@ -17,6 +17,6 @@ urlpatterns = [
 
               ] + static(settings.FILES_URL, document_root=settings.FILES_ROOT) \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-              + static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
+              + static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT) \
+              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-print(urlpatterns)
