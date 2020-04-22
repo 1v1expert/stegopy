@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from app.forms import UploadDataForm
+from app.models import Steganographic
 
 
 def index_view(request):
@@ -18,4 +19,4 @@ def result_view(request, result_id=None):
     if result_id is None:
         return redirect('app:index')
     
-    return render(request, 'index.html', {})
+    return render(request, 'result.html', {'steganographic': Steganographic.objects.get(pk=result_id)})

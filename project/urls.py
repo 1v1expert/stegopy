@@ -18,3 +18,5 @@ urlpatterns = [
               ] + static(settings.FILES_URL, document_root=settings.FILES_ROOT) \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
+
+print(urlpatterns)
