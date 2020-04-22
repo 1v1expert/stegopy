@@ -20,10 +20,12 @@ class Steganographic(models.Model):
     is_ok = models.BooleanField(default=False, verbose_name='Стегоконтейнер готов')
     has_errors = models.BooleanField(default=False, verbose_name='Есть ошибки')
     
-    
     def __str__(self):
         return 'Стег. группа №{}, '.format(self.pk)
     
     class Meta:
         verbose_name = "Группа"
         verbose_name_plural = "Группы"
+    
+    def create_stegocontainer(self):
+        pass

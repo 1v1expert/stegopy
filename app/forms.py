@@ -1,8 +1,6 @@
 from django.forms import ModelForm
 from django import forms
 from app.models import Steganographic
-# from catalog.choices import TYPES_SEARCH
-# from catalog.models import FixedAttributeValue, UnFixedAttributeValue, Manufacturer
 
 
 class UploadDataForm(ModelForm):
