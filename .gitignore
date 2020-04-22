@@ -133,3 +133,9 @@ dmypy.json
 
 # settings project
 local.py
+
+# static files
+images/original/
+images/watermark/
+images/fractal/
+images/stego/
