@@ -10,7 +10,7 @@ class FractalImage(object):
     def __init__(self, default_palette=False, pk=None):
         self.default_palette = default_palette
         
-        self.l = 800
+        self.l = 145
         self.dimensions = (self.l, self.l)
         self.scale = 1.0 / (self.dimensions[0] / 3)
         # center = (2.2, 1.5)       # Use this for Mandelbrot set

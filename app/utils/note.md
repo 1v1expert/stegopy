@@ -17,3 +17,7 @@ https://github.com/michael2012z/PyFractal/tree/master/fractals
 https://golos.io/@fractal/2d-generatory-fraktalnoi-grafiki
 
 https://github.com/Sapunov/stegopy
+
+===
+https://github.com/ragibson/Steganography
+https://pypi.org/project/stego-lsb/

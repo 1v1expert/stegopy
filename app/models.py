@@ -16,7 +16,10 @@ class Steganographic(models.Model):
     
     text = models.CharField(max_length=500, null=True, blank=True, default='Здесь могла бы быть умная цитата',
                             verbose_name='Данные для qr-кода')
-    
+
+    fractal_key_with_watermark = models.ImageField(upload_to='images/fractal_with_watermark/', null=True, blank=True,
+                                                   verbose_name='Ключ со встроенным ЦВЗ')
+
     is_ok = models.BooleanField(default=False, verbose_name='Стегоконтейнер готов')
     has_errors = models.BooleanField(default=False, verbose_name='Есть ошибки')
     

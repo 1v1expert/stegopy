@@ -11,7 +11,7 @@ class Qrcode(object):
         self.filename = 'images/watermark/watermark_{}.bmp'.format(pk if pk is not None else time.time())
     
     def generate(self, data):
-        img = qrcode.make(data=data, box_size=5)
+        img = qrcode.make(data=data, box_size=2)
         
         img.save(settings.MEDIA_ROOT + '/' + self.filename)
         
