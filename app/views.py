@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from app.forms import UploadDataForm
 from app.models import Steganographic
-from app.utils.JuliaFractal import FractalImage
+from app.utils.embed import Container
 
 
 def index_view(request):
@@ -9,9 +9,7 @@ def index_view(request):
         form = UploadDataForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            fractal = FractalImage(default_palette=True, pk=form.instance.pk).generate()
-            form.instance.fractal_key_image = fractal.filename
-            form.instance.save()
+            Container(instance=form.instance).build()
             return redirect('app:result', form.instance.pk)
     else:
         form = UploadDataForm()
