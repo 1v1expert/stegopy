@@ -13,6 +13,7 @@ class Container(object):
         self.instance = instance
         self.fractal = None
         self.watermark = None
+        # self.fractal_key_with_watermark = None
         
     def get_fractal_key(self):
         return FractalImage(default_palette=True, pk=self.instance.pk).generate()
@@ -22,8 +23,8 @@ class Container(object):
     
     def hide_lsb(self):
         output_filename = 'images/fractal_with_watermark/fractal_with_watermark_{}.png'.format(self.instance.pk)
-        LSBSteg.hide_data(self.fractal.filename,
-                          self.watermark.filename,
+        LSBSteg.hide_data(settings.MEDIA_ROOT + '/' + self.fractal.filename,
+                          settings.MEDIA_ROOT + '/' + self.watermark.filename,
                           settings.MEDIA_ROOT + '/' + output_filename,
                           1,
                           1
@@ -37,6 +38,6 @@ class Container(object):
         self.instance.fractal_key_image = self.fractal.filename
         self.instance.watermark_image = self.watermark.filename
         
-        self.hide_lsb()
+        self.instance.fractal_key_with_watermark = self.hide_lsb()
         
         self.instance.save()
