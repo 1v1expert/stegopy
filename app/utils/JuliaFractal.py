@@ -28,11 +28,12 @@ class FractalImage(object):
     def generate(self):
         for y in range(self.dimensions[1]):  # Draw our image
             for x in range(self.dimensions[0]):
-                c = complex(x * self.scale - self.center[0], y * self.scale - self.center[1])
+                z = complex(x * self.scale - self.center[0], y * self.scale - self.center[1])
             
                 # n = iterate_mandelbrot(c)            # Use this for Mandelbrot set
                 # n = iterate_mandelbrot(complex(0.3, 0.6), c)  # Use this for Julia set
-                n = self.my_mandelbrot(c)
+                # c = complex(-0.74543, 0.11301)
+                n = self.my_mandelbrot(z)
             
                 if n is None:
                     v = 1
