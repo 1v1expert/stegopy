@@ -1,5 +1,9 @@
 import cv2
 import numpy
+import numpy as np
+import scipy.interpolate
+import scipy.misc
+
 
 class DammstenderDeleigle(object):
     """ Метод Дармстедтера-Делейгла-Квисквотера-Макка """
@@ -11,6 +15,7 @@ class DammstenderDeleigle(object):
         self.R = img[:, :, 0] # красный канал
         self.G = img[:, :, 1] # зеленый канал
         self.B = img[:, :, 2] # синий канал - модифицируемый
+        # print(self.B)
         
         self.X = len(self.B)   # размер по X
         self.Y = len(self.B[1])   # размер по Y
@@ -22,13 +27,14 @@ class DammstenderDeleigle(object):
         self.fractal_key_with_watermarkR = self.fractal_key_with_watermark[:, :, 0] # красный канал встр. изобр.
         
         # print(self.fractal_key_with_watermarkR)
-        self.segment()
+        self.S = self.segment()
         
         BW = self.getBW()
         Mvec_bin = self.getBWbits(BW)
         
-        Lm = len(Mvec_bin)
+        self.Lm = len(Mvec_bin)
         
+        self.Zone()
         # print(Lm)
         
         # print(self.R, '\n----\n', self.B, '\n----\n' , self.G)#, self.B)
@@ -41,7 +47,7 @@ class DammstenderDeleigle(object):
         
         S = [] # массив(вектор) формируем из матрицы X * Y блоками N * N
         
-        for b in range(1, self.Ns):
+        for b in range(self.Ns):
             r1 = (self.N * (b-1) + 1) % self.X
             r2 = r1 + self.N -1
             S.append(self.B[r1:r2, c1:c2]) # записываем блок в вектор
@@ -70,6 +76,72 @@ class DammstenderDeleigle(object):
         bytes = numpy.fromiter(BW, dtype="uint8")
         return numpy.unpackbits(bytes)
     
+    def Zone(self):
+        """ разбиение на зоны """
+        print(self.Lm, len(self.S))
+        for s in range(self.Lm):
+            f = numpy.zeros(self.N * self.N)
+            Block = self.S[s]
+            
+            p = 0
+            for i in range(len(Block)):
+                for j in range(len(Block[0])):
+                    f[p] = Block[i, j]
+                    p += 1
+                    
+            # print(f)
+            F = sorted(f)
+            # print(F)
+            r = 10
+            Ksi = numpy.zeros(r)
+            Phi = numpy.zeros(r)
+
+            
+            
+            for x in range(1, r):
+                Ksi[x] = x * round(self.N * self.N / (r - 1))
+                
+            Ksi[0] = 1
+            Ksi[r-1] = self.N * self.N
+            
+            for x in range(len(Ksi)):
+                # print(Ksi[x])
+                # print(x, F[Ksi[x]-1])
+                Phi[x] = F[int(Ksi[x])-1]
+            
+            Smax = 0
+            alpha = 0
+            
+            # print(Ksi)
+            Spline = scipy.interpolate.PchipInterpolator(Ksi, Phi)
+            deriv = Spline.derivative()
+            for w in range(self.N * self.N):
+                sp = deriv(w)
+                if sp > Smax:
+                    Smax = sp
+                    alpha = w
+            if alpha == 0:
+                alpha = self.N * self.N /2
+            elif alpha == 1:
+                alpha = 2
+            elif alpha == self.N * self.N:
+                alpha = self.N * self.N - 1
+                
+            T1 = 6
+            T2 = 3
+            B_min = 0
+            B_pl = 0
+            Zone1 = numpy.zeros((self.N, self.N))
+            
+            if Smax < T1:
+                for i in range(self.N):
+                    for j in range(self.N):
+                        Zone1[i, j] = (j + 1) % 2 + 1
+                        
+            if Smax > T1:
+                pass
+                    # print(deriv(w))
+            # deriv = scipy.misc.derivative(Spline)
 
 if __name__ == '__main__':
-    DammstenderDeleigle('SuMoNeDone.bmp', input_file_path='key.png')
+    DammstenderDeleigle('gg.jpg', input_file_path='key.png')
