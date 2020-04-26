@@ -3,12 +3,15 @@ import numpy
 import numpy as np
 import scipy.interpolate
 import scipy.misc
-
+import time
+from datetime import timedelta
 
 class DammstenderDeleigle(object):
     """ Метод Дармстедтера-Делейгла-Квисквотера-Макка """
     
     def __init__(self, input_image_path, input_file_path=None, steg_image_path=None):
+        self.start_time = time.time()
+        
         img = cv2.imread(input_image_path)
         # im_color = cv2.applyColorMap(img, cv2.COLORMAP_HSV)
         
@@ -35,25 +38,26 @@ class DammstenderDeleigle(object):
         self.Lm = len(Mvec_bin)
         
         self.Zone()
-        # print(Lm)
         
-        # print(self.R, '\n----\n', self.B, '\n----\n' , self.G)#, self.B)
+        print("{}".format(str(timedelta(seconds=time.time() - self.start_time))))
     
     def segment(self):
         """ Разбиение контейнера на сигменты """
         
-        c1 = 1  # левая граница столбцов
+        c1 = 0  # левая граница столбцов
         c2 = self.N # правая граница столбцов
         
         S = [] # массив(вектор) формируем из матрицы X * Y блоками N * N
         
         for b in range(self.Ns):
-            r1 = (self.N * (b-1) + 1) % self.X
-            r2 = r1 + self.N -1
+            r1 = (self.N * (b) + 1) % self.X
+            r2 = r1 + self.N
             S.append(self.B[r1:r2, c1:c2]) # записываем блок в вектор
             if r2 == self.X:
                 c1 = c1 + self.N
                 c2 = c2 + self.N
+                
+        # print(S)
         return S
         # print(S[18220])
         
@@ -79,6 +83,7 @@ class DammstenderDeleigle(object):
     def Zone(self):
         """ разбиение на зоны """
         print(self.Lm, len(self.S))
+        allZones = []
         for s in range(self.Lm):
             f = numpy.zeros(self.N * self.N)
             Block = self.S[s]
@@ -89,30 +94,23 @@ class DammstenderDeleigle(object):
                     f[p] = Block[i, j]
                     p += 1
                     
-            # print(f)
             F = sorted(f)
-            # print(F)
             r = 10
             Ksi = numpy.zeros(r)
             Phi = numpy.zeros(r)
 
-            
-            
-            for x in range(1, r):
+            for x in range(r):
                 Ksi[x] = x * round(self.N * self.N / (r - 1))
                 
             Ksi[0] = 1
             Ksi[r-1] = self.N * self.N
             
             for x in range(len(Ksi)):
-                # print(Ksi[x])
-                # print(x, F[Ksi[x]-1])
                 Phi[x] = F[int(Ksi[x])-1]
             
             Smax = 0
             alpha = 0
             
-            # print(Ksi)
             Spline = scipy.interpolate.PchipInterpolator(Ksi, Phi)
             deriv = Spline.derivative()
             for w in range(self.N * self.N):
@@ -129,7 +127,7 @@ class DammstenderDeleigle(object):
                 
             T1 = 6
             T2 = 3
-            B_min = 0
+            B_mn = 0
             B_pl = 0
             Zone1 = numpy.zeros((self.N, self.N))
             
@@ -139,9 +137,36 @@ class DammstenderDeleigle(object):
                         Zone1[i, j] = (j + 1) % 2 + 1
                         
             if Smax > T1:
-                pass
-                    # print(deriv(w))
-            # deriv = scipy.misc.derivative(Spline)
+                for x in range(alpha, 1, -1):
+                    if x == 1:
+                        B_mn = alpha
+                    
+                    if (F[alpha] - F[x]) > T2:
+                        B_mn = x
+                        break
+                
+                for x in range(alpha, self.N * self.N):
+                    if x == self.N * self.N:
+                        B_pl = alpha
+                        
+                    if (F[x] - F[alpha]) > T2:
+                        B_pl = x
+                        break
+                
+                for i in range(self.N):
+                    for j in range(self.N):
+                        try:
+                            if Block[i, j] <= F[B_mn]: Zone1[i, j] = 1
+                            if Block[i, j] >= F[B_pl]: Zone1[i, j] = 2
+                            if (Block[i, j] > F[B_mn]) and (Block[i, j] < F[B_pl]): Zone1[i, j] = 3
+                        except Exception as e:
+                            print(len(F), F, '\n', Zone1, i, j, B_mn, '\n', Block)
+                            raise e
+                            
+            allZones.append(Zone1)
+            
+        print(allZones[0], '\n====\n', allZones[94])
+
 
 if __name__ == '__main__':
-    DammstenderDeleigle('gg.jpg', input_file_path='key.png')
+    DammstenderDeleigle('images/main_image.jpg', input_file_path='images/key.png')
