@@ -1,5 +1,5 @@
 import cv2
-
+import numpy
 
 class DammstenderDeleigle(object):
     """ Метод Дармстедтера-Делейгла-Квисквотера-Макка """
@@ -18,11 +18,18 @@ class DammstenderDeleigle(object):
         
         self.Ns = int(self.X * self.Y / (self.N * self.N)) # количество блоков
         
-        #self.fractal_key_with_watermark = cv2.imread(input_file_path) # встраиваемое изображение
-        #self.fractal_key_with_watermarkR = self.fractal_key_with_watermark[0] # красный канал встр. изобр.
+        self.fractal_key_with_watermark = cv2.imread(input_file_path) # встраиваемое изображение
+        self.fractal_key_with_watermarkR = self.fractal_key_with_watermark[:, :, 0] # красный канал встр. изобр.
         
+        # print(self.fractal_key_with_watermarkR)
         self.segment()
         
+        BW = self.getBW()
+        Mvec_bin = self.getBWbits(BW)
+        
+        Lm = len(Mvec_bin)
+        
+        # print(Lm)
         
         # print(self.R, '\n----\n', self.B, '\n----\n' , self.G)#, self.B)
     
@@ -41,9 +48,28 @@ class DammstenderDeleigle(object):
             if r2 == self.X:
                 c1 = c1 + self.N
                 c2 = c2 + self.N
+        return S
+        # print(S[18220])
         
-        print(S[18220])
+    def getBW(self):
         
+        BW = []
+        for i in range(len(self.fractal_key_with_watermarkR)): # переводим матрицу в вектор
+            for j in range(len(self.fractal_key_with_watermarkR[0])):
+                pixel = self.fractal_key_with_watermarkR[i, j]
+                
+                if pixel > 127:  # делаем изображение чёрно-белым
+                    BW.append(255)
+                else:
+                    BW.append(0)
+
+        return BW
+    
+    def getBWbits(self, BW):
+        """ получаем биты встраиваемого изображения """
+        bytes = numpy.fromiter(BW, dtype="uint8")
+        return numpy.unpackbits(bytes)
+    
 
 if __name__ == '__main__':
-    DammstenderDeleigle('SuMoNeDone.bmp')
+    DammstenderDeleigle('SuMoNeDone.bmp', input_file_path='key.png')
