@@ -1,10 +1,10 @@
 import cv2
 import numpy
-import numpy as np
 import scipy.interpolate
 import scipy.misc
 import time
 from datetime import timedelta
+
 
 class DammstenderDeleigle(object):
     """ Метод Дармстедтера-Делейгла-Квисквотера-Макка """

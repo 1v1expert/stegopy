@@ -10,13 +10,29 @@ def index_view(request):
         if form.is_valid():
             form.save()
             Container(instance=form.instance).build()
-            return redirect('app:result', form.instance.pk)
+            return redirect('app:encrypt', form.instance.pk)
     else:
         form = UploadDataForm()
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'index.html',
+                  {'form': form,
+                   'header_text': 'StegoPy в качестве ЦВЗ использует QR-код с введёной Вами информацией и '
+                                  'используя метод наименее значащего бита (LSB) скрывает его в пикселях RGB '
+                                  'фрактального изображения, инициализируемого псевдо-случайными параметрами на '
+                                  'множестве Жюлиа. Далее полученный секретный ключ(СК) встраивается в контейнер методом'
+                                  ' Дармстедтера-Делейгла-Квисквотера-Макка. Данная технология позволяет достичь высокий '
+                                  'уровень визуального качества, а различия между оригинальным и заполненным '
+                                  'контейнером не заметны человеческому глазу.'}
+                  )
 
 
-def result_view(request, result_id=None):
+def encrypt_view(request, result_id=None):
+    if result_id is None:
+        return redirect('app:index')
+    
+    return render(request, 'result.html', {'steganographic': Steganographic.objects.get(pk=result_id)})
+
+
+def decrypt_view(request, result_id=None):
     if result_id is None:
         return redirect('app:index')
     

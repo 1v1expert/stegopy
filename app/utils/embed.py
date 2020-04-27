@@ -4,15 +4,22 @@ from app.stego_lsb import LSBSteg
 
 from django.conf import settings
 
+# from datetime import datetime
+from time import gmtime, strftime
+import time
+
 
 class Container(object):
     """ Главный стеганографический контейнер """
     def __init__(self, instance=None):
         assert instance is not None, 'Instance steganographic object is not be None'
         
+        self.start_time = time.time()
+        
         self.instance = instance
         self.fractal = None
         self.watermark = None
+        self.original_image = self.instance.original_image
         # self.fractal_key_with_watermark = None
         
     def get_fractal_key(self):
@@ -31,6 +38,16 @@ class Container(object):
                           )
         return output_filename
     
+    def dammstender_deleigle(self):
+        output_filename = 'images/stego/stego_{}.png'.format(self.instance.pk)
+        LSBSteg.hide_data(settings.MEDIA_ROOT + '/' + self.original_image.name,
+                          settings.MEDIA_ROOT + '/' + self.instance.fractal_key_with_watermark.name,
+                          settings.MEDIA_ROOT + '/' + output_filename,
+                          1,
+                          1
+                          )
+        return output_filename
+    
     def build(self):
         self.fractal = self.get_fractal_key()
         self.watermark = self.get_qrcode()
@@ -40,4 +57,8 @@ class Container(object):
         
         self.instance.fractal_key_with_watermark = self.hide_lsb()
         
+        self.instance.stego_image = self.dammstender_deleigle()
+        
         self.instance.save()
+
+        print(strftime("%H:%M:%S", gmtime(time.time() - self.start_time)))
