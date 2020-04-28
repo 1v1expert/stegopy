@@ -4,8 +4,11 @@ from app.models import Steganographic
 
 
 class UploadDataForm(ModelForm):
-    original_image = forms.ImageField(widget=forms.ClearableFileInput(attrs={"class": "form-control"}))
-    text = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Введите текст"}))
+    original_image = forms.ImageField(widget=forms.ClearableFileInput(attrs={"class": "custom-file-input"}))
+    text = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control",
+                                                        "placeholder": "Введите текст",
+                                                        "rows": 3,
+                                                        "accept": "image/png, image/jpeg, image/bmp, image/jpg"}))
         # widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': "Введите код подтверждения"}))
 
     class Meta:

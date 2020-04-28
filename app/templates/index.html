@@ -4,23 +4,37 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-md-8 align-self-center jumbotron">
+    <div class="col-md-10 align-self-center jumbotron">
         <h4 class="mb-3">Загрузите изображение и введите секретный текст</h4>
-        <form class="needs-validation" novalidate="" method="post" enctype="multipart/form-data">
+        <h5 style="text-align: center; color: #dc3545">{{ error }}</h5>
+        <form class="needs-validation" id="stegano_form" method="post" enctype="multipart/form-data">
             <div class="row">
 
                 {% csrf_token %}
 
-                <div class="col-md-4 mb-3">
-                    {{ form.original_image }}
+                <div class="col-md-6 mb-3">
+                    <div class="custom-file">
+                        {{ form.original_image }}
+                        <!--<input type="file" class="" id="customFile">-->
+                        <label class="custom-file-label" for="id_original_image">Выбрать файл</label>
+                        <small id="imageHelpBlock" class="form-text text-muted">
+                            Изображение должно быть достаточно большим. Желательные размеры контейнера составляют
+                            более 1024px x 1024px. Поддерживаемые форматы PNG, JPG, JPEG, BMP
+                        </small>
+                    </div>
+
                 </div>
 
-                <div class="col-md-8 mb-3">
+                <div class="col-md-6 mb-3">
                     {{ form.text }}
-                    <small class="text-muted">Full name as displayed on card</small>
-                    <div class="invalid-feedback">
-                        Name on card is required
-                    </div>
+                    <!--<small class="text-muted">Full name as displayed on card</small>-->
+                    <small id="textHelpBlock" class="form-text text-muted">
+                        Ваш текст должен содержать не более 500 символов.
+                        Ограничение искусственное, введёное на время тестирования.
+                    </small>
+                    <!--<div class="invalid-feedback">-->
+                    <!--Name on card is required-->
+                    <!--</div>-->
                 </div>
             </div>
 
@@ -32,3 +46,16 @@
 </div>
 
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+    $('#id_original_image').change(function () {
+        if ($(this).val() !== '') {
+            $(this).next().text('Выбран файл: ' + $(this)[0].files[0].name);
+        }
+        else {
+            $(this).next().text('Выбрать файл');
+        }
+    });
+</script>
+{% endblock extra_js %}
