@@ -10,8 +10,7 @@
                 <div class="card mb-4 shadow-sm">
                     <img src="{{ steganographic.original_image.url }}" width="100%" height="100%">
                     <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">Оригинальный незаполненный контейнер размером NxN</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
@@ -26,8 +25,8 @@
                 <div class="card mb-4 shadow-sm">
                     <img src="{{ steganographic.watermark_image.url }}" width="100%" height="100%">
                     <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">Цифровой водяной знак(ЦВЗ) с интегрированной информацией:
+                            <strong>{{steganographic.text}}</strong> с размером блока 5</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
@@ -42,8 +41,9 @@
                 <div class="card mb-4 shadow-sm">
                     <img src="{{ steganographic.fractal_key_image.url }}" width="100%" height="100%">
                     <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">Фрактальное изображение сгенерированное при помощи алгоритма времени
+                            убегания (Escape Time Algorithm) на множестве Жюлиа с центром в (1.5, 1.5) и
+                            количеством итераций = 30, размером 145х145</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-3">
                 <div class="card mb-4 shadow-sm">
                     <img src="{{ steganographic.stego_image.url }}" width="100%" height="100%">
                     <div class="card-body">
@@ -91,3 +91,27 @@
 </div>
 
 {% endblock content %}
+
+{% block extra_css %}
+<style>
+    .card-body {
+        height: 200px;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1.25rem;
+    }
+
+    img {
+        vertical-align: middle;
+        border-style: none;
+        height: 200px;
+    }
+
+    p {
+        font-size: 11px;
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock extra_css %}
