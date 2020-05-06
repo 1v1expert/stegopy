@@ -8,7 +8,7 @@ from django.conf import settings
 class Steganographic(models.Model):
     """  Модель стеганографической группы """
     
-    original_image = models.ImageField(upload_to='images/original/',
+    original_image = models.ImageField(upload_to='images/original/', null=True, blank=True,
                                        verbose_name='Оригинальное изображение')
     
     watermark_image = models.ImageField(upload_to='images/watermark/', null=True, blank=True,
@@ -23,9 +23,12 @@ class Steganographic(models.Model):
 
     fractal_key_with_watermark = models.ImageField(upload_to='images/fractal_with_watermark/', null=True, blank=True,
                                                    verbose_name='Ключ со встроенным ЦВЗ')
-
-    is_ok = models.BooleanField(default=False, verbose_name='Стегоконтейнер готов')
+    
+    is_decrypt = models.BooleanField(default=True, verbose_name='Сокрытие')
+    is_ok = models.BooleanField(default=False, verbose_name='Успешно')
     has_errors = models.BooleanField(default=False, verbose_name='Есть ошибки')
+    
+    tech_info = models.TextField(null=True, blank=True, verbose_name='Тех. информация о контейнере')
     
     def __str__(self):
         return 'Стег. группа №{}, '.format(self.pk)
