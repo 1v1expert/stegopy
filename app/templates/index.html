@@ -4,100 +4,25 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-md-10 align-self-center jumbotron">
-        <h4 class="mb-3">Спрятать сообщение внутри контейнера</h4>
-        <h5 style="text-align: center; color: #dc3545">{{ error }}</h5>
-        <form class="needs-validation" id="stegano_form" method="post" enctype="multipart/form-data">
-            <div class="row">
+    <div class="col-md-6 text-center">
+        <button type="button" class="btn btn-primary btn-lg" id="encrypt">Получить стегоконтейнер</button>
 
-                {% csrf_token %}
-
-                <div class="col-md-6 mb-3">
-                    <div class="custom-file">
-                        {{ encrypt_form.original_image }}
-                        <!--<input type="file" class="" id="customFile">-->
-                        <label class="custom-file-label" for="id_original_image">Выбрать файл</label>
-                        <small id="imageHelpBlockOriginal_image" class="form-text text-muted">
-                            Изображение должно быть достаточно большим. Желательные размеры контейнера составляют
-                            более 1024px x 1024px. Поддерживаемые форматы PNG, JPG, JPEG, BMP
-                        </small>
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    {{ encrypt_form.text }}
-                    <!--<small class="text-muted">Full name as displayed on card</small>-->
-                    <small id="textHelpBlockText" class="form-text text-muted">
-                        Ваш текст должен содержать не более 500 символов.
-                        Ограничение искусственное, введёное на время тестирования.
-                    </small>
-                    <!--<div class="invalid-feedback">-->
-                    <!--Name on card is required-->
-                    <!--</div>-->
-                </div>
-            </div>
-
-
-            <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Получить стегоизображение</button>
-        </form>
+    </div>
+    <div class="col-md-6 text-center">
+        <button type="button" class="btn btn-secondary btn-lg" id="decrypt">Получить информацию </button>
     </div>
 </div>
 
-
-<div class="row justify-content-center">
-
-    <div class="col-md-10 align-self-center jumbotron">
-        <h4 class="mb-3">Получить сообщение из стегоконтейнера</h4>
-        <h5 style="text-align: center; color: #dc3545">{{ error }}</h5>
-        <form class="needs-validation" id="stegano_form" method="post" enctype="multipart/form-data">
-            <div class="row">
-
-                {% csrf_token %}
-
-                <div class="col-md-6 mb-3">
-                    <div class="custom-file">
-                        {{ decrypt_form.stego_image }}
-                        <!--<input type="file" class="" id="customFile">-->
-                        <label class="custom-file-label" for="id_stego_image">Выбрать файл</label>
-                        <small id="imageHelpBlockstego_image" class="form-text text-muted">
-                            Приложите изображение, получение после формирования стегоконтейнера
-                        </small>
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    {{ decrypt_form.key }}
-                    <!--<small class="text-muted">Full name as displayed on card</small>-->
-                    <small id="textHelpBlockKey" class="form-text text-muted">
-                        Введите ключ, сформированный при генерации стегоконтейнера
-                    </small>
-                    <!--<div class="invalid-feedback">-->
-                    <!--Name on card is required-->
-                    <!--</div>-->
-                </div>
-            </div>
-
-
-            <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Получить оригинальное изображение</button>
-        </form>
-    </div>
-</div>
 
 {% endblock content %}
 
 {% block extra_js %}
 <script>
-    $('#id_original_image').change(function () {
-        if ($(this).val() !== '') {
-            $(this).next().text('Выбран файл: ' + $(this)[0].files[0].name);
-        }
-        else {
-            $(this).next().text('Выбрать файл');
-        }
+    $('#decrypt').on('click', function () {
+        document.location.href = document.location.origin + "{% url 'app:decrypt' %}";
+    });
+    $('#encrypt').on('click', function () {
+        document.location.href = document.location.origin + "{% url 'app:encrypt' %}";
     });
 </script>
 {% endblock extra_js %}

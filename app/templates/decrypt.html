@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-10 align-self-center jumbotron">
+        <h4 class="mb-3">Получить сообщение из стегоконтейнера</h4>
+        <h5 style="text-align: center; color: #dc3545">{{ error }}</h5>
+        <form class="needs-validation" id="stegano_form" method="post" enctype="multipart/form-data">
+            <div class="row">
+
+                {% csrf_token %}
+
+                <div class="col-md-6 mb-3">
+                    <div class="custom-file">
+                        {{ decrypt_form.stego_image }}
+                        <!--<input type="file" class="" id="customFile">-->
+                        <label class="custom-file-label" for="id_stego_image">Выбрать файл</label>
+                        <small id="imageHelpBlockstego_image" class="form-text text-muted">
+                            Приложите изображение, получение после формирования стегоконтейнера
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    {{ decrypt_form.key }}
+                    <!--<small class="text-muted">Full name as displayed on card</small>-->
+                    <small id="textHelpBlockKey" class="form-text text-muted">
+                        Введите ключ, сформированный при генерации стегоконтейнера
+                    </small>
+                    <!--<div class="invalid-feedback">-->
+                    <!--Name on card is required-->
+                    <!--</div>-->
+                </div>
+            </div>
+
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Получить оригинальное изображение</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    $('#id_stego_image').change(function () {
+        if ($(this).val() !== '') {
+            $(this).next().text('Выбран файл: ' + $(this)[0].files[0].name);
+        }
+        else {
+            $(this).next().text('Выбрать файл');
+        }
+    });
+</script>
+{% endblock extra_js %}

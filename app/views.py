@@ -14,20 +14,14 @@ header_text = 'StegoPy в качестве ЦВЗ использует QR-код
 
 @a_decorator_passing_logs
 def index_view(request):
-    # if request.method == 'POST':
-    #     pass
-    # else:
-    encrypt_form = EncryptForm()
-    decrypt_form = DecryptForm()
     return render(request, 'index.html',
-                  {'encrypt_form': encrypt_form,
-                   'decrypt_form': decrypt_form,
-                   'header_text': header_text}
-                  )
+                  {
+                   'header_text': header_text
+                  })
 
 
 @a_decorator_passing_logs
-def encrypt_view(request, result_id=None):
+def encrypt_view(request):
     if request.method == 'POST':
         encrypt_form = EncryptForm(request.POST, request.FILES)
         if encrypt_form.is_valid():
@@ -40,22 +34,27 @@ def encrypt_view(request, result_id=None):
                                        has_errors=True,
                                        raw=str(e)
                                        )
-                return render(request, 'index.html',
+                return render(request, 'encrypt.html',
                               {'form': encrypt_form,
                                'header_text': header_text,
                                'error': 'Произошла ошибка при формировании стегоконтейнера, обратитесь в поддержку'
                                }
                               )
             return redirect('app:encrypt', encrypt_form.instance.pk)
-    else:
-        if result_id is None:
-            return redirect('app:index')
-    
-        return render(request, 'result.html', {'steganographic': Steganographic.objects.get(pk=result_id)})
+
+    encrypt_form = EncryptForm()
+    return render(request, 'result.html', {"encrypt_form": encrypt_form})
 
 
 @a_decorator_passing_logs
 def decrypt_view(request, result_id=None):
+
+    decrypt_form = DecryptForm()
+    return render(request, 'decrypt.html', {'decrypt_form': decrypt_form})
+
+
+@a_decorator_passing_logs
+def result_view(request, result_id=None):
     if result_id is None:
         return redirect('app:index')
     
