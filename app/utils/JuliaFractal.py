@@ -18,7 +18,10 @@ class FractalImage(object):
         self.center = (c_x, c_y)  # Use this for Julia set
         self.iterate_max = 30
         self.colors_max = 2
-    
+        self.c = complex(-0.76643, 0.16471)
+        
+        # self.str_init_params = '{}-{}-{}'.format(self.)
+        
         self.img = Image.new("RGB", self.dimensions)
         self.d = ImageDraw.Draw(self.img)
         
@@ -33,7 +36,7 @@ class FractalImage(object):
                 # n = iterate_mandelbrot(c)            # Use this for Mandelbrot set
                 # n = iterate_mandelbrot(complex(0.3, 0.6), c)  # Use this for Julia set
                 # c = complex(-0.74543, 0.11301)
-                n = self.my_mandelbrot(z)
+                n = self.my_mandelbrot(z, c=self.c)
             
                 if n is None:
                     v = 1

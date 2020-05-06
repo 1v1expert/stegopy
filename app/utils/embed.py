@@ -15,6 +15,7 @@ class Container(object):
         assert instance is not None, 'Instance steganographic object is not be None'
         
         self.start_time = time.time()
+        self.timestamp = self.start_time
         
         self.instance = instance
         self.fractal = None
@@ -23,10 +24,16 @@ class Container(object):
         # self.fractal_key_with_watermark = None
         
     def get_fractal_key(self):
-        return FractalImage(default_palette=True, pk=self.instance.pk).generate()
+        fractal = FractalImage(default_palette=True, pk=self.instance.pk).generate()
+        self.instance.fractal_time = time.time() - self.timestamp
+        self.timestamp = time.time()
+        return fractal
     
     def get_qrcode(self):
-        return Qrcode(self.instance.pk).generate(self.instance.text)
+        qrcode = Qrcode(self.instance.pk).generate(self.instance.text)
+        self.instance.watermark_time = time.time() - self.timestamp
+        self.timestamp = time.time()
+        return qrcode
     
     def hide_lsb(self):
         output_filename = 'images/fractal_with_watermark/fractal_with_watermark_{}.png'.format(self.instance.pk)
@@ -36,6 +43,8 @@ class Container(object):
                           1,
                           1
                           )
+        self.instance.fr_with_wtmrk_time = time.time() - self.timestamp
+        self.timestamp = time.time()
         return output_filename
     
     def dammstender_deleigle(self):
@@ -46,6 +55,8 @@ class Container(object):
                           1,
                           1
                           )
+        self.instance.stego_time = time.time() - self.start_time
+        self.timestamp = time.time()
         return output_filename
     
     def build(self):

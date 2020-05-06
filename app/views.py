@@ -40,10 +40,10 @@ def encrypt_view(request):
                                'error': 'Произошла ошибка при формировании стегоконтейнера, обратитесь в поддержку'
                                }
                               )
-            return redirect('app:encrypt', encrypt_form.instance.pk)
+        return redirect('app:result', encrypt_form.instance.pk)
 
     encrypt_form = EncryptForm()
-    return render(request, 'result.html', {"encrypt_form": encrypt_form})
+    return render(request, 'encrypt.html', {"encrypt_form": encrypt_form})
 
 
 @a_decorator_passing_logs
