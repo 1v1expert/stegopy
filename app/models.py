@@ -24,6 +24,8 @@ class Steganographic(models.Model):
     fractal_key_with_watermark = models.ImageField(upload_to='images/fractal_with_watermark/', null=True, blank=True,
                                                    verbose_name='Ключ со встроенным ЦВЗ')
     
+    key = models.CharField(null=True, blank=True, max_length=300, verbose_name='Ключ для формирования фрактала')
+    
     is_decrypt = models.BooleanField(default=True, verbose_name='Сокрытие')
     is_ok = models.BooleanField(default=False, verbose_name='Успешно')
     has_errors = models.BooleanField(default=False, verbose_name='Есть ошибки')
